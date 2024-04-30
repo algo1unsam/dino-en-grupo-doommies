@@ -74,10 +74,12 @@ object gameOver {
 object reloj {
 	
 	var tiempo = 0 
-	
+	var tiempoRecord = 0
 
 	method text() = tiempo.toString()
+	method textRecord() = tiempoRecord.toString()
 	method position() = game.at(1, game.height()-1)
+	method positionRecord() = game.at(8, game.height()-1)
 	
 	method pasarTiempo() {
 		tiempo += 1
@@ -141,7 +143,7 @@ object dino {
 	method position() = position
 	
 	method saltar(){
-		if( flag == 0){
+		if( flag == 0 and vivo == true){
 		self.subir()
 		game.schedule(250, {=> self.bajar()})
 		}
