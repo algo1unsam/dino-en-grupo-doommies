@@ -14,6 +14,7 @@ object juego{
 		game.addVisual(reloj)
 	
 		keyboard.space().onPressDo{ self.jugar()}
+		keyboard.up().onPressDo {dino.saltar()}
 		
 		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
 		
@@ -106,6 +107,8 @@ object suelo{
 
 object dino {
 	var vivo = true
+	
+	var flag = 0
 
 	var position = game.at(1,suelo.position().y())
 	
@@ -113,15 +116,21 @@ object dino {
 	method position() = position
 	
 	method saltar(){
-		//COMPLETAR
+		if( flag == 0){
+		self.subir()
+		game.schedule(250, {=> self.bajar()})
+	}
 	}
 	
+	
 	method subir(){
+		flag = 1
 		position = position.up(1)
 	}
 	
 	method bajar(){
 		position = position.down(1)
+		flag = 0
 	}
 	method morir(){
 		game.say(self,"¡Auch!")
