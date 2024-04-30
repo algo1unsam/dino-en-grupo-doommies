@@ -14,6 +14,7 @@ object juego{
 		game.addVisual(reloj)
 	
 		keyboard.space().onPressDo{ self.jugar()}
+		keyboard.up().onPressDo{dino.saltar()}
 		
 		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
 		
