@@ -4,7 +4,7 @@ import dino.*
 program dinosaurio {
 
 	juego.configurar()
-	juego.iniciar()
+	juego.init()
 	game.start()
 
 }

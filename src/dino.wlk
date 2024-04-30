@@ -20,6 +20,10 @@ object juego{
 		
 	} 
 	
+	method init() {
+		game.addVisual(titulo)
+	}
+	
 	method iniciar(){
 		dino.iniciar()
 		reloj.iniciar()
@@ -30,7 +34,12 @@ object juego{
 		if (dino.estaVivo()) 
 			dino.saltar()
 		else {
-			game.removeVisual(gameOver)
+			if (game.allVisuals().contains(gameOver)) {
+				game.removeVisual(gameOver)
+			}
+			if (game.allVisuals().contains(titulo)) {
+				game.removeVisual(titulo)
+			}
 			self.iniciar()
 		}
 		
@@ -69,6 +78,11 @@ object gameOver {
 		}
 	}
 	
+}
+
+object titulo {
+	method position() = game.center()
+	method text() = "CHROME://DINO DEL CHINO"
 }
 
 object reloj {
@@ -133,7 +147,7 @@ object suelo{
 
 
 object dino {
-	var vivo = true
+	var vivo = false
 	
 	var flag = 0
 
