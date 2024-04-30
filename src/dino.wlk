@@ -13,8 +13,8 @@ object juego{
 		game.addVisual(dino)
 		game.addVisual(reloj)
 	
-		keyboard.space().onPressDo{ self.jugar()}
-		keyboard.up().onPressDo {dino.saltar()}
+		keyboard.space().onPressDo({ self.jugar()})
+    keyboard.up().onPressDo({dino.saltar()})
 		
 		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
 		
@@ -60,14 +60,24 @@ object reloj {
 	method position() = game.at(1, game.height()-1)
 	
 	method pasarTiempo() {
-		//COMPLETAR
+		tiempo += 1
 	}
 	method iniciar(){
 		tiempo = 0
-		game.onTick(100,"tiempo",{self.pasarTiempo()})
+		if(dino.estaVivo()){
+			game.onTick(100,"tiempo",{self.pasarTiempo()})
+		} else {
+			tiempo = 0
+		}
 	}
 	method detener(){
-		//COMPLETAR
+		if(!dino.estaVivo()){
+			dino.morir()
+			tiempo = 0
+			return gameOver.text()
+		} else {
+			return null
+		}
 	}
 }
 
@@ -86,14 +96,17 @@ object cactus {
 	}
 	
 	method mover(){
-		//COMPLETAR
+		position = position.left(1)
+		if (position.x() < 0) {
+			position = new Position(x = game.width(), y = position.y())
+		} 
 	}
 	
 	method chocar(){
-		//COMPLETAR
+		juego.terminar()
 	}
     method detener(){
-		//COMPLETAR
+		game.removeTickEvent("moverCactus");
 	}
 }
 
