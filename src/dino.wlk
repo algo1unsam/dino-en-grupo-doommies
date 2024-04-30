@@ -14,7 +14,7 @@ object juego{
 		game.addVisual(reloj)
 	
 		keyboard.space().onPressDo({ self.jugar()})
-    keyboard.up().onPressDo({dino.saltar()})
+    	keyboard.up().onPressDo({dino.saltar()})
 		
 		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
 		
@@ -38,6 +38,7 @@ object juego{
 	
 	method terminar(){
 		game.addVisual(gameOver)
+		gameOver.animacionGameOver()
 		cactus.detener()
 		reloj.detener()
 		dino.morir()
@@ -46,10 +47,28 @@ object juego{
 }
 
 object gameOver {
-	method position() = game.center()
-	method text() = "GAME OVER"
+	const goalMsg = "!!! GAME OVER !!!"
+	const msg = ["!", "!", "!", " ", "G", "A", "M", "E", " ", "O", "V", "E", "R", " ", "!", "!", "!"]
+	var strMsg = ""
+	var charIndex = 0
 	
-
+	method position() = game.center()
+	method text() = strMsg
+	
+	method animacionGameOver() {
+		charIndex = 0
+		strMsg = ""
+		game.schedule(100, {self.animarMensaje()})
+	}
+	
+	method animarMensaje() {
+		if (strMsg != goalMsg) {
+			strMsg += msg.get(charIndex)
+			charIndex++
+			game.schedule(100, {self.animarMensaje()})
+		}
+	}
+	
 }
 
 object reloj {
@@ -125,7 +144,7 @@ object dino {
 		if( flag == 0){
 		self.subir()
 		game.schedule(250, {=> self.bajar()})
-	}
+		}
 	}
 	
 	
