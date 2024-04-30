@@ -85,14 +85,17 @@ object cactus {
 	}
 	
 	method mover(){
-		//COMPLETAR
+		position = position.left(1)
+		if (position.x() < 0) {
+			position = new Position(x = game.width(), y = position.y())
+		} 
 	}
 	
 	method chocar(){
-		//COMPLETAR
+		juego.terminar()
 	}
     method detener(){
-		//COMPLETAR
+		game.removeTickEvent("moverCactus");
 	}
 }
 
