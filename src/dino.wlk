@@ -54,8 +54,9 @@ object gameOver {
 
 object reloj {
 	
-	var tiempo = 0
+	var tiempo = 0 
 	
+
 	method text() = tiempo.toString()
 	method position() = game.at(1, game.height()-1)
 	
@@ -64,21 +65,13 @@ object reloj {
 	}
 	method iniciar(){
 		tiempo = 0
-		if(dino.estaVivo()){
-			game.onTick(100,"tiempo",{self.pasarTiempo()})
-		} else {
-			tiempo = 0
-		}
+		game.onTick(100,"tiempo",{self.pasarTiempo()})
 	}
+	
 	method detener(){
-		if(!dino.estaVivo()){
-			dino.morir()
-			tiempo = 0
-			return gameOver.text()
-		} else {
-			return null
-		}
+		game.removeTickEvent("tiempo")
 	}
+
 }
 
 object cactus {
