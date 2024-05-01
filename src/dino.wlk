@@ -88,12 +88,9 @@ object titulo {
 object reloj {
 	
 	var tiempo = 0 
-	var tiempoRecord = 0
 
 	method text() = tiempo.toString()
-	method textRecord() = tiempoRecord.toString()
 	method position() = game.at(1, game.height()-1)
-	method positionRecord() = game.at(8, game.height()-1)
 	
 	method pasarTiempo() {
 		tiempo += 1
