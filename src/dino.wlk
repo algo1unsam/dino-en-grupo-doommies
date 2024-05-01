@@ -13,11 +13,16 @@ object juego{
 		game.addVisual(dino)
 		game.addVisual(reloj)
 	
-		keyboard.space().onPressDo{ self.jugar()}
+		keyboard.space().onPressDo({ self.jugar()})
+    	keyboard.up().onPressDo({dino.saltar()})
 		
 		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
 		
 	} 
+	
+	method init() {
+		game.addVisual(titulo)
+	}
 	
 	method iniciar(){
 		dino.iniciar()
@@ -29,7 +34,12 @@ object juego{
 		if (dino.estaVivo()) 
 			dino.saltar()
 		else {
-			game.removeVisual(gameOver)
+			if (game.allVisuals().contains(gameOver)) {
+				game.removeVisual(gameOver)
+			}
+			if (game.allVisuals().contains(titulo)) {
+				game.removeVisual(titulo)
+			}
 			self.iniciar()
 		}
 		
@@ -37,6 +47,7 @@ object juego{
 	
 	method terminar(){
 		game.addVisual(gameOver)
+		gameOver.animacionGameOver()
 		cactus.detener()
 		reloj.detener()
 		dino.morir()
@@ -45,29 +56,54 @@ object juego{
 }
 
 object gameOver {
-	method position() = game.center()
-	method text() = "GAME OVER"
+	const goalMsg = "!!! GAME OVER !!!"
+	const msg = ["!", "!", "!", " ", "G", "A", "M", "E", " ", "O", "V", "E", "R", " ", "!", "!", "!"]
+	var strMsg = ""
+	var charIndex = 0
 	
+	method position() = game.center()
+	method text() = strMsg
+	
+	method animacionGameOver() {
+		charIndex = 0
+		strMsg = ""
+		game.schedule(100, {self.animarMensaje()})
+	}
+	
+	method animarMensaje() {
+		if (strMsg != goalMsg) {
+			strMsg += msg.get(charIndex)
+			charIndex++
+			game.schedule(100, {self.animarMensaje()})
+		}
+	}
+	
+}
 
+object titulo {
+	method position() = game.center()
+	method text() = "CHROME://DINO DEL CHINO"
 }
 
 object reloj {
 	
-	var tiempo = 0
-	
+	var tiempo = 0 
+
 	method text() = tiempo.toString()
 	method position() = game.at(1, game.height()-1)
 	
 	method pasarTiempo() {
-		//COMPLETAR
+		tiempo += 1
 	}
 	method iniciar(){
 		tiempo = 0
 		game.onTick(100,"tiempo",{self.pasarTiempo()})
 	}
+	
 	method detener(){
-		//COMPLETAR
+		game.removeTickEvent("tiempo")
 	}
+
 }
 
 object cactus {
@@ -85,14 +121,17 @@ object cactus {
 	}
 	
 	method mover(){
-		//COMPLETAR
+		position = position.left(1)
+		if (position.x() < 0) {
+			position = new Position(x = game.width(), y = position.y())
+		} 
 	}
 	
 	method chocar(){
-		//COMPLETAR
+		juego.terminar()
 	}
     method detener(){
-		//COMPLETAR
+		game.removeTickEvent("moverCactus");
 	}
 }
 
@@ -105,7 +144,9 @@ object suelo{
 
 
 object dino {
-	var vivo = true
+	var vivo = false
+	
+	var flag = 0
 
 	var position = game.at(1,suelo.position().y())
 	
@@ -113,15 +154,21 @@ object dino {
 	method position() = position
 	
 	method saltar(){
-		//COMPLETAR
+		if( flag == 0 and vivo == true){
+		self.subir()
+		game.schedule(250, {=> self.bajar()})
+		}
 	}
 	
+	
 	method subir(){
+		flag = 1
 		position = position.up(1)
 	}
 	
 	method bajar(){
 		position = position.down(1)
+		flag = 0
 	}
 	method morir(){
 		game.say(self,"¡Auch!")
